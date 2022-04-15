@@ -31,6 +31,7 @@ internal class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .IsRequired();
 
         builder.HasOne(e => e.Author)
-            .WithMany(u => u.CreatedExercises);
+            .WithMany(u => u.CreatedExercises)
+            .OnDelete(DeleteBehavior.ClientCascade);
     }
 }

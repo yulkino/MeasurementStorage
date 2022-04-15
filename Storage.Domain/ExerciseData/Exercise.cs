@@ -24,4 +24,6 @@ public sealed class Exercise
     public DateTime CreationDate { get; init; }
 
     public IEnumerable<ExerciseResolve> ExerciseResolves { get; set; }
+
+    private Exercise() { }
 }

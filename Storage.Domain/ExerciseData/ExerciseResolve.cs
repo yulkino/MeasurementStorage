@@ -23,4 +23,6 @@ public sealed class ExerciseResolve
     public string Resolve { get; init; }
     public DateTime SendingDate { get; init; }
     public double ExecutionTime { get; init; }
+
+    private ExerciseResolve() { }
 }

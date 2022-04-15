@@ -1,11 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Storage.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
+var services = builder.Services;
+services.AddControllers();
+services.AddInfrastructure(builder.Configuration.GetConnectionString("MeasurementStorageDatabase"));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
 
 var app = builder.Build();
 

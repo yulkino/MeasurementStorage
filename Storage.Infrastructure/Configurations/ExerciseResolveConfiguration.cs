@@ -12,10 +12,12 @@ internal class ExerciseResolveConfiguration : IEntityTypeConfiguration<ExerciseR
             .HasKey(e => e.Id);
 
         builder.HasOne(e => e.Exercise)
-            .WithMany(e => e.ExerciseResolves);
+            .WithMany(e => e.ExerciseResolves)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(e => e.User)
-            .WithMany(u => u.ResolvedExercises);
+            .WithMany(u => u.ResolvedExercises)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.Property(e => e.Resolve)
             .IsRequired()

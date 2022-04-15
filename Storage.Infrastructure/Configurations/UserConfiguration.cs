@@ -30,10 +30,12 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .IsUnique();
 
         builder.HasMany(u => u.ResolvedExercises)
-            .WithOne(e => e.User);
+            .WithOne(e => e.User)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.CreatedExercises)
-            .WithOne(e => e.Author);
+            .WithOne(e => e.Author)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(u => u.Roles)
             .WithMany(r => r.Users)
