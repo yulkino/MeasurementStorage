@@ -4,9 +4,9 @@ namespace Storage.Application.Repositories;
 
 public interface IRoleRepository
 {
-    Role Default { get; }
-    Role Editor { get; }
-    Role Admin { get; }
-
-    Task<List<Role>> GetRoles();
+    Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken);
+    Task<Role> GetDefaultRole(CancellationToken cancellationToken);
+    Task<Role> GetEditorRole(CancellationToken cancellationToken);
+    Task<Role> GetAdminRole(CancellationToken cancellationToken);
+    Task SaveRoleChangesAsync(CancellationToken cancellationToken);
 }
