@@ -32,4 +32,10 @@ public class ExerciseRepository : IExerciseRepository
 
     public Task SaveExerciseChangesAsync(CancellationToken cancellationToken)
         => _context.SaveChangesAsync(cancellationToken);
+
+    public Task GetResolvesCount(Exercise exercise, CancellationToken cancellationToken)
+        => _context.ExercisesResolves.Where(e => e.Exercise == exercise).CountAsync(cancellationToken);
+
+    public Task<List<Exercise>> GetExercisesByTitlePart(string titlePart, CancellationToken cancellationToken)
+        => _context.Exercises.Where(e => e.Title.Contains(titlePart)).ToListAsync(cancellationToken);
 }

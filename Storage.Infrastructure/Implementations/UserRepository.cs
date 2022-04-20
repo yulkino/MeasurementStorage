@@ -29,6 +29,12 @@ public class UserRepository : IUserRepository
     public Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
         => _context.Users.FindAsync(id, cancellationToken).AsTask();
 
+    public Task<List<User>> GetUsersByEmailPartAsync(string emailPart, CancellationToken cancellationToken)
+        => _context.Users.Where(u => u.Email.Contains(emailPart)).ToListAsync(cancellationToken);
+
+    public Task<List<User>> GetUsersByLoginPartAsync(string loginPart, CancellationToken cancellationToken)
+        => _context.Users.Where(u => u.Login.Contains(loginPart)).ToListAsync(cancellationToken);
+
     public Task SaveUserChangesAsync(CancellationToken cancellationToken) 
         => _context.SaveChangesAsync(cancellationToken);
 }
