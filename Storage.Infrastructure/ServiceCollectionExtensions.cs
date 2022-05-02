@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Storage.Application.Repositories;
+using Storage.Domain.UserData;
 using Storage.Infrastructure.Data;
 using Storage.Infrastructure.Implementations;
 
@@ -11,6 +13,10 @@ public static class ServiceCollectionExtensions
     public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+        services.AddIdentity<User, Role>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserStore<UserStore<User, Role, ApplicationDbContext, Guid>>()
+            .AddRoleStore<RoleStore<Role, ApplicationDbContext, Guid>>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IExerciseRepository, ExerciseRepository>();

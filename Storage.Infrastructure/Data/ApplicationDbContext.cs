@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Storage.Domain.ExerciseData;
 using Storage.Domain.UserData;
 using System.Reflection;
 
 namespace Storage.Infrastructure.Data;
 
-public sealed class ApplicationDbContext : DbContext
+public sealed class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
@@ -20,6 +21,7 @@ public sealed class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

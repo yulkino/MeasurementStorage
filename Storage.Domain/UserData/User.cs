@@ -1,17 +1,18 @@
-﻿using Storage.Domain.ExerciseData;
+﻿using Microsoft.AspNetCore.Identity;
+using Storage.Domain.ExerciseData;
 
 namespace Storage.Domain.UserData;
 
-public sealed class User
+public sealed class User : IdentityUser<Guid>
 {
-    public User(string email, string login, string password)
+    private User(string email, string login, string password, List<Role> roles)
     {
         Id = Guid.NewGuid();
         Email = email;
         Login = login;
         Password = password;
 
-        Roles = new List<Role>() { Role.Default };
+        Roles = roles;
     }
 
     public Guid Id { get; init; }

@@ -1,6 +1,8 @@
-﻿namespace Storage.Domain.UserData;
+﻿using Microsoft.AspNetCore.Identity;
 
-public sealed class Role
+namespace Storage.Domain.UserData;
+
+public sealed class Role : IdentityRole<Guid>
 {
     public Guid Id { get; init; }
     public string Name { get; init; }
