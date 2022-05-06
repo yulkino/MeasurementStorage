@@ -18,8 +18,8 @@ public class ExerciseRepository : IExerciseRepository
     public Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken)
         => _context.Exercises.AddAsync(exercise, cancellationToken).AsTask();
 
-    public void DeleteExercise(Exercise exercise)
-        => _context.Remove(exercise);
+    public Task DeleteExerciseAsync(Exercise exercise)
+        => Task.FromResult(_context.Exercises.Remove(exercise));
 
     public Task<List<Exercise>> GetAllExercisesAsync(CancellationToken cancellationToken)
         => _context.Exercises.ToListAsync(cancellationToken);

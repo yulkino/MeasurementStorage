@@ -1,6 +1,6 @@
-﻿using Storage.Api.DTOs.User;
+﻿using Storage.Api.DTOs.UserDtos;
 
-namespace Storage.Api.DTOs.Exercise;
+namespace Storage.Api.DTOs.ExerciseDtos;
 
 public sealed record ExerciseCreationDto(
     string Title,

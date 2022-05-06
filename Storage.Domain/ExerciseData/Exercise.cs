@@ -4,13 +4,11 @@ namespace Storage.Domain.ExerciseData;
 
 public sealed class Exercise
 {
-    public Exercise(string title, string description, string inputData, string outputData, User author, DateTime creationDate)
+    public Exercise(string title, string description, User author, DateTime creationDate)
     {
         Id = Guid.NewGuid();
         Title = title;
         Description = description;
-        InputData = inputData;
-        OutputData = outputData;
         Author = author;
         CreationDate = creationDate;
     }
@@ -18,8 +16,7 @@ public sealed class Exercise
     public Guid Id { get; init; }
     public string Title { get; set; }
     public string Description { get; set; }
-    public string InputData { get; set; }
-    public string OutputData { get; set; }
+    public IEnumerable<TestCase> TestCases { get; }
     public User Author { get; init; }
     public DateTime CreationDate { get; init; }
 

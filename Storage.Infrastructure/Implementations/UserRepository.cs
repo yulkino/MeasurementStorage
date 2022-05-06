@@ -17,13 +17,13 @@ public class UserRepository : IUserRepository
     public Task CreateUserAsync(User user, CancellationToken cancellationToken) 
         => _context.Users.AddAsync(user, cancellationToken).AsTask();
 
-    public void DeleteUser(User user) 
-        => _context.Users.Remove(user);
+    public Task DeleteUserAsync(User user) 
+        => Task.FromResult(_context.Users.Remove(user));
 
     public Task<List<User>> GetAllUsersAsync(CancellationToken cancellationToken)
         => _context.Users.ToListAsync(cancellationToken);
 
-    public Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
+    public Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         => _context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
     public Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -31,6 +31,9 @@ public class UserRepository : IUserRepository
 
     public Task<List<User>> GetUsersByEmailPartAsync(string emailPart, CancellationToken cancellationToken)
         => _context.Users.Where(u => u.Email.Contains(emailPart)).ToListAsync(cancellationToken);
+
+    public Task<User?> GetUsersByLoginAsync(string login, CancellationToken cancellationToken)
+        => _context.Users.FindAsync(login, cancellationToken).AsTask();
 
     public Task<List<User>> GetUsersByLoginPartAsync(string loginPart, CancellationToken cancellationToken)
         => _context.Users.Where(u => u.Login.Contains(loginPart)).ToListAsync(cancellationToken);

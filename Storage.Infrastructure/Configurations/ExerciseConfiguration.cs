@@ -19,16 +19,12 @@ internal class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
             .IsRequired()
             .HasMaxLength(1000);
 
-        builder.Property(e => e.InputData)
-            .IsRequired()
-            .HasMaxLength(1000);
-
-        builder.Property(e => e.OutputData)
-            .IsRequired()
-            .HasMaxLength(1000);
-
         builder.Property(e => e.CreationDate)
             .IsRequired();
+
+        builder.HasMany(e => e.TestCases)
+            .WithOne(tc => tc.Exercise)
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         builder.HasOne(e => e.Author)
             .WithMany(u => u.CreatedExercises)

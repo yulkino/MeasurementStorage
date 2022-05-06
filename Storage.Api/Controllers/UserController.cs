@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Storage.Api.DTOs.User;
+using Storage.Api.DTOs.UserDtos;
 
 namespace Storage.Api.Controllers;
 
@@ -27,6 +27,7 @@ public class UserController : ControllerBase
 
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<UserDto>> GetUser([FromRoute] Guid id)
     {
@@ -35,7 +36,7 @@ public class UserController : ControllerBase
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<UserDto>> GetUser([FromRoute] string login)
+    public async Task<ActionResult<UserDto>> Login([FromRoute] UserLoginDto userLoginDto)
     {
 
     }
@@ -55,7 +56,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<ActionResult<UserDto>> EditUser([FromRoute] Guid userId, [FromBody] UserEditionDto user)
+    public async Task<ActionResult<UserDto>> EditUser([FromRoute] Guid userId, [FromBody] UserLoginDto user)
     {
 
     }
@@ -68,7 +69,7 @@ public class UserController : ControllerBase
 
     [HttpPut]
     [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<UserDto>> UserRoleEdit([FromRoute] Guid userId, [FromBody] UserRoleDto role)
+    public async Task<ActionResult<UserDto>> EditUserRole([FromRoute] Guid userId, [FromBody] UserRoleDto role)
     {
 
     }

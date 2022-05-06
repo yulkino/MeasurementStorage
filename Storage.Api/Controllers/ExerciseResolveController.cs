@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Storage.Api.DTOs.ExerciseResolve;
+using Storage.Api.DTOs.ExerciseResolveDtos;
 
 namespace Storage.Api.Controllers;
 
@@ -28,12 +28,6 @@ public class ExerciseResolveController : ControllerBase
 
     [HttpPost]
     public async Task<ActionResult<ExerciseResolveDto>> CreateExerciseResolve([FromBody] ExerciseResolveCreationDto exerciseResolveCreationDto)
-    {
-
-    }
-
-    [HttpDelete]
-    public async Task<ActionResult> DeleteExerciseResolve([FromRoute] Guid exerciseResolveId)
     {
 
     }

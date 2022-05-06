@@ -1,7 +1,7 @@
-﻿using Storage.Api.DTOs.Exercise;
-using Storage.Api.DTOs.User;
+﻿using Storage.Api.DTOs.ExerciseDtos;
+using Storage.Api.DTOs.UserDtos;
 
-namespace Storage.Api.DTOs.ExerciseResolve;
+namespace Storage.Api.DTOs.ExerciseResolveDtos;
 
 public sealed record ExerciseResolveCreationDto(
     ExerciseDto Exercise,

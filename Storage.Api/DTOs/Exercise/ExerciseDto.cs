@@ -1,6 +1,6 @@
-﻿using Storage.Api.DTOs.User;
+﻿using Storage.Api.DTOs.UserDtos;
 
-namespace Storage.Api.DTOs.Exercise;
+namespace Storage.Api.DTOs.ExerciseDtos;
 
 public sealed record ExerciseDto(
     Guid Id,
@@ -9,4 +9,5 @@ public sealed record ExerciseDto(
     string InputData,
     string OutputData,
     ShortUserDto Author,
-    DateTime CreationDate);
+    DateTime CreationDate,
+    int ExerciseCount);

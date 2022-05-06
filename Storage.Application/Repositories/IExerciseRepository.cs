@@ -9,7 +9,7 @@ public interface IExerciseRepository
     Task<List<Exercise>> GetAllExercisesAsync(CancellationToken cancellationToken);
     Task<Exercise?> GetExerciseByIdAsync(Guid id, CancellationToken cancellationToken);
     Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken);
-    void DeleteExercise(Exercise exercise);
+    Task DeleteExerciseAsync(Exercise exercise);
     Task GetResolvesCount(Exercise exercise, CancellationToken cancellationToken);
     Task<List<Exercise>> GetExercisesByTitlePart(string titlePart, CancellationToken cancellationToken);
     Task SaveExerciseChangesAsync(CancellationToken cancellationToken);

@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Storage.Api.DTOs.Exercise;
+using Storage.Api.DTOs.ExerciseDtos;
 
 namespace Storage.Api.Controllers;
 
@@ -58,14 +58,16 @@ public class ExerciseController : ControllerBase
 
     }
 
+    [Authorize(Roles = "Default")]
     [HttpGet]
-    public async Task<ActionResult> GetExerciseLeaderBoard([FromRoute] Guid exerciseResolveId)
+    public async Task<ActionResult> GetExerciseLeaderBoard([FromRoute] Guid exerciseId)
     {
 
     }
 
+    [Authorize(Roles = "Default")]
     [HttpGet]
-    public async Task<ActionResult> GetExerciseStatistics([FromRoute] Guid exerciseResolveId)
+    public async Task<ActionResult> GetExerciseStatistics([FromRoute] Guid exerciseId)
     {
 
     }

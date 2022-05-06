@@ -17,4 +17,9 @@
     <ProjectReference Include="..\Storage.Infrastructure\Storage.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mapping\ExerciseMapping\" />
+    <Folder Include="Mapping\ExerciseResolveMapping\" />
+  </ItemGroup>
+
 </Project>

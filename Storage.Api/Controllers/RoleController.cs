@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Storage.Api.DTOs.Role;
+using Storage.Api.DTOs.RoleDtos;
 
 namespace Storage.Api.Controllers;
 

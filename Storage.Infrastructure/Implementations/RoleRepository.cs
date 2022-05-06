@@ -21,13 +21,13 @@ public class RoleRepository : IRoleRepository
     public Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken) 
         => _context.Roles.ToListAsync(cancellationToken);
 
-    public Task<Role> GetDefaultRole(CancellationToken cancellationToken)
+    public Task<Role> GetDefaultRoleAsync(CancellationToken cancellationToken)
         => (_context.Roles.FindAsync(_defaultRoleName, cancellationToken).AsTask())!;
 
-    public Task<Role> GetEditorRole(CancellationToken cancellationToken)
+    public Task<Role> GetEditorRoleAsync(CancellationToken cancellationToken)
         => (_context.Roles.FindAsync(_editorRoleName, cancellationToken).AsTask())!;
 
-    public Task<Role> GetAdminRole(CancellationToken cancellationToken)
+    public Task<Role> GetAdminRoleAsync(CancellationToken cancellationToken)
         => (_context.Roles.FindAsync(_adminRoleName, cancellationToken).AsTask())!;
 
     public Task SaveRoleChangesAsync(CancellationToken cancellationToken)

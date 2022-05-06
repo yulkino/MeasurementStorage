@@ -18,9 +18,6 @@ public class ExerciseResolveRepository : IExerciseResolveRepository
     public Task CreateExerciseResolveAsync(ExerciseResolve exerciseResolve, CancellationToken cancellationToken)
         => _context.ExercisesResolves.AddAsync(exerciseResolve, cancellationToken).AsTask();
 
-    public void DeleteExerciseResolve(ExerciseResolve exerciseResolve)
-        => _context.ExercisesResolves.Remove(exerciseResolve);
-
     public Task<ExerciseResolve?> GetExerciseResolvesByIdAsync(Guid id, CancellationToken cancellationToken)
         => _context.ExercisesResolves.FindAsync(id, cancellationToken).AsTask();
 
