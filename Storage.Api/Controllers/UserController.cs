@@ -3,6 +3,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Storage.Api.DTOs.UserDtos;
+using Storage.Application.Results;
+using Storage.Application.UserMediator.CreateUser;
+using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
 
@@ -21,13 +24,13 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsers()
     {
 
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<UserDto>> GetUser([FromRoute] Guid id)
     {
@@ -45,7 +48,14 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreationDto user)
     {
-
+        var command = new CreateUserCommand(user.Login, user.Email, user.Password);
+        var response = await _mediator.Send(command);
+        return response switch
+        {
+            KeyIsOccupied keyIsOccupied => BadRequest(keyIsOccupied.Content),
+            Created<User> created => CreatedAtAction(nameof(CreateUser), _mapper.Map<UserDto>(created.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
     [HttpDelete]

@@ -5,31 +5,23 @@ using Storage.Infrastructure.Data;
 
 namespace Storage.Infrastructure.Implementations;
 
-public class RoleRepository : IRoleRepository
+internal class RoleRepository : Repository, IRoleRepository
 {
-    private readonly ApplicationDbContext _context;
-
     private string _defaultRoleName = "Default";
     private string _editorRoleName = "Editor";
     private string _adminRoleName = "Admin";
 
-    public RoleRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    public RoleRepository(ApplicationDbContext context) : base(context) { }
 
     public Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken) 
-        => _context.Roles.ToListAsync(cancellationToken);
+        => Context.Roles.ToListAsync(cancellationToken);
 
     public Task<Role> GetDefaultRoleAsync(CancellationToken cancellationToken)
-        => (_context.Roles.FindAsync(_defaultRoleName, cancellationToken).AsTask())!;
+        => Context.Roles.FindAsync(_defaultRoleName, cancellationToken).AsTask()!;
 
     public Task<Role> GetEditorRoleAsync(CancellationToken cancellationToken)
-        => (_context.Roles.FindAsync(_editorRoleName, cancellationToken).AsTask())!;
+        => Context.Roles.FindAsync(_editorRoleName, cancellationToken).AsTask()!;
 
     public Task<Role> GetAdminRoleAsync(CancellationToken cancellationToken)
-        => (_context.Roles.FindAsync(_adminRoleName, cancellationToken).AsTask())!;
-
-    public Task SaveRoleChangesAsync(CancellationToken cancellationToken)
-        => _context.SaveChangesAsync(cancellationToken);
+        => Context.Roles.FindAsync(_adminRoleName, cancellationToken).AsTask()!;
 }

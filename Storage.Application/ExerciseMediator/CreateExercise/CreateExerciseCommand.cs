@@ -6,5 +6,6 @@ namespace Storage.Application.ExerciseMediator.CreateExercise;
 public record CreateExerciseCommand(
     string Title,
     string Description,
+    List<KeyValuePair<string, string>> TestCases,
     Guid AuthorId,
-    DateTime CreationDate) : IRequest<Exercise>;
+    DateTime CreationDate) : IOperation;

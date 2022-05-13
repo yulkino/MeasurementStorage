@@ -6,36 +6,28 @@ using Storage.Infrastructure.Data;
 
 namespace Storage.Infrastructure.Implementations;
 
-public class ExerciseRepository : IExerciseRepository
+internal class ExerciseRepository : Repository, IExerciseRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public ExerciseRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    public ExerciseRepository(ApplicationDbContext context) : base(context) { }
 
     public Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken)
-        => _context.Exercises.AddAsync(exercise, cancellationToken).AsTask();
+        => Context.Exercises.AddAsync(exercise, cancellationToken).AsTask();
 
-    public Task DeleteExerciseAsync(Exercise exercise)
-        => Task.FromResult(_context.Exercises.Remove(exercise));
+    public Task DeleteExerciseAsync(Exercise exercise, CancellationToken cancellationToken)
+        => Task.FromResult(Context.Exercises.Remove(exercise));
 
     public Task<List<Exercise>> GetAllExercisesAsync(CancellationToken cancellationToken)
-        => _context.Exercises.ToListAsync(cancellationToken);
+        => Context.Exercises.ToListAsync(cancellationToken);
 
     public Task<List<Exercise>> GetExercisesByAuthorAsync(User author, CancellationToken cancellationToken)
-        => _context.Exercises.Where(e => e.Author == author).ToListAsync(cancellationToken);
+        => Context.Exercises.Where(e => e.Author == author).ToListAsync(cancellationToken);
 
     public Task<Exercise?> GetExerciseByIdAsync(Guid id, CancellationToken cancellationToken)
-        => _context.Exercises.FindAsync(id, cancellationToken).AsTask();
-
-    public Task SaveExerciseChangesAsync(CancellationToken cancellationToken)
-        => _context.SaveChangesAsync(cancellationToken);
+        => Context.Exercises.FindAsync(id, cancellationToken).AsTask();
 
     public Task GetResolvesCount(Exercise exercise, CancellationToken cancellationToken)
-        => _context.ExercisesResolves.Where(e => e.Exercise == exercise).CountAsync(cancellationToken);
+        => Context.ExercisesResolves.Where(e => e.Exercise == exercise).CountAsync(cancellationToken);
 
     public Task<List<Exercise>> GetExercisesByTitlePart(string titlePart, CancellationToken cancellationToken)
-        => _context.Exercises.Where(e => e.Title.Contains(titlePart)).ToListAsync(cancellationToken);
+        => Context.Exercises.Where(e => e.Title.Contains(titlePart)).ToListAsync(cancellationToken);
 }

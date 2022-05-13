@@ -7,4 +7,4 @@ public record CreateExerciseResolveCommand(
     Guid ExerciseId,
     Guid UserId,
     string Resolve,
-    DateTime SendingDate) : IRequest<ExerciseResolve>;
+    DateTime SendingDate) : IOperation;

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 
 namespace Storage.Application.ExerciseMediator.GetExercise;
 
-internal sealed class GetExerciseHandler : IRequestHandler<GetExerciseQuery, Exercise>
+internal sealed class GetExerciseHandler : IOperationHandler<GetExerciseQuery>
 {
     private readonly IExerciseRepository _exerciseRepository;
 
@@ -13,13 +14,13 @@ internal sealed class GetExerciseHandler : IRequestHandler<GetExerciseQuery, Exe
         _exerciseRepository = exerciseRepository;
     }
 
-    public async Task<Exercise> Handle(GetExerciseQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(GetExerciseQuery request, CancellationToken cancellationToken)
     {
         var exerciseId = request.ExerciseId;
         var exercise = await _exerciseRepository.GetExerciseByIdAsync(exerciseId, cancellationToken);
         if (exercise is null)
-            throw new ArgumentException($"Exercise with id {exerciseId} not found");
+            return new DoesNotExist($"Exercise with id {exerciseId} not found");
 
-        return exercise;
+        return new Success<Exercise>(exercise);
     }
 }

@@ -4,9 +4,9 @@ using Storage.Domain.UserData;
 
 namespace Storage.Api.Mapping.UserMapping;
 
-internal sealed class UserShortDtoMapping : Profile
+internal sealed class UserToUserShortDto : Profile
 {
-    public UserShortDtoMapping()
+    public UserToUserShortDto()
     {
         CreateMap<User, ShortUserDto>()
             .ForMember(dto => dto.Id, o => o.MapFrom(u => u.Id))

@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Storage.Application.Repositories;
+using Storage.Application.Results;
 
 namespace Storage.Application.ExerciseMediator.DeleteExercise;
 
-internal sealed class DeleteExerciseCommandHandler : IRequestHandler<DeleteExerciseCommand, Unit>
+internal sealed class DeleteExerciseCommandHandler : IOperationHandler<DeleteExerciseCommand>
 {
     private readonly IExerciseRepository _exerciseRepository;
 
@@ -12,17 +13,17 @@ internal sealed class DeleteExerciseCommandHandler : IRequestHandler<DeleteExerc
         _exerciseRepository = exerciseRepository;
     }
 
-    public async Task<Unit> Handle(DeleteExerciseCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(DeleteExerciseCommand request, CancellationToken cancellationToken)
     {
         var exerciseId = request.ExerciseId;
 
         var exercise = await _exerciseRepository.GetExerciseByIdAsync(exerciseId, cancellationToken);
         if (exercise is null)
-            throw new ArgumentException($"Exercise with id {exerciseId} not found");
+            return new DoesNotExist($"Exercise with id {exerciseId} not found");
 
-        await _exerciseRepository.DeleteExerciseAsync(exercise);
-        await _exerciseRepository.SaveExerciseChangesAsync(cancellationToken);
+        await _exerciseRepository.DeleteExerciseAsync(exercise, cancellationToken);
+        await _exerciseRepository.SaveChangesAsync(cancellationToken);
 
-        return Unit.Value;
+        return new WithoutContent();
     }
 }

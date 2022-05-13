@@ -1,6 +1,3 @@
-﻿using MediatR;
-using Storage.Domain.UserData;
+﻿namespace Storage.Application.UserMediator.GetUser;
 
-namespace Storage.Application.UserMediator.GetUser;
-
-public record GetUserQuery(Guid UserId) : IRequest<User>;
+public record GetUserQuery(Guid UserId) : IOperation;

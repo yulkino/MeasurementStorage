@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Storage.Api.DTOs.User;
+using Storage.Api.DTOs.UserDtos;
 using Storage.Domain.UserData;
 
 namespace Storage.Api.Mapping.UserMapping;
 
-internal sealed class UserDtoMapping : Profile
+internal sealed class UserToUserDto : Profile
 {
-    public UserDtoMapping()
+    public UserToUserDto()
     {
         CreateMap<User, UserDto>()
             .ForMember(dto => dto.Login, o => o.MapFrom(u => u.Login))

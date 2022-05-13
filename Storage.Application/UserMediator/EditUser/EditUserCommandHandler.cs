@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.UserData;
 
 namespace Storage.Application.UserMediator.EditUser;
 
-internal sealed class EditUserCommandHandler : IRequestHandler<EditUserCommand, User>
+internal sealed class EditUserCommandHandler : IOperationHandler<EditUserCommand>
 {
     private readonly IUserRepository _userRepository;
 
@@ -13,18 +13,19 @@ internal sealed class EditUserCommandHandler : IRequestHandler<EditUserCommand, 
         _userRepository = userRepository;
     }
 
-    public async Task<User> Handle(EditUserCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(EditUserCommand request, CancellationToken cancellationToken)
     {
-        var (userId, newLogin, newPassword) = request;
+        var (userId, newLogin, newPassword, newAvatarUrl) = request;
 
         var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
         if (user is null)
-            throw new ArgumentException($"User with id {userId} not found");
+            return new DoesNotExist($"User with id {userId} not found");
 
         user.Login = newLogin;
         user.Password = newPassword;
-        await _userRepository.SaveUserChangesAsync(cancellationToken);
+        user.AvatarUrl = newAvatarUrl;
+        await _userRepository.SaveChangesAsync(cancellationToken);
 
-        return user;
+        return new Success<User>(user);
     }
 }

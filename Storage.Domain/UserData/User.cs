@@ -21,4 +21,6 @@ public sealed class User : IdentityUser<Guid>
     public IEnumerable<Role> Roles { get; set; }
     public IEnumerable<Exercise> CreatedExercises { get; set; }
     public IEnumerable<ExerciseResolve> ResolvedExercises { get; set; }
+
+    private User() { }
 }

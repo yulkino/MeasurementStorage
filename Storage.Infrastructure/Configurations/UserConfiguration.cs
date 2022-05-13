@@ -37,7 +37,7 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .WithOne(e => e.Author)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(u => u.Roles)
+        builder.HasMany(u => u.Roles) //todo возможно таблица не нужна // это связь многие-ко-многим кроме как через таблицу она не делается
             .WithMany(r => r.Users)
             .UsingEntity("UserRoles");
     }

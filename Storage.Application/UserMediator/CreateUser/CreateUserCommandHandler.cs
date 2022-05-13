@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.UserData;
 
-namespace Storage.Application.UserMediator.GetUser;
+namespace Storage.Application.UserMediator.CreateUser;
 
-internal sealed class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
+internal sealed class CreateUserCommandHandler : IOperationHandler<CreateUserCommand>
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
@@ -15,24 +16,24 @@ internal sealed class CreateUserCommandHandler : IRequestHandler<CreateUserComma
         _roleRepository = roleRepository;
     }
 
-    public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var (login, email, password) = request;
 
         var user = await _userRepository.GetUserByEmailAsync(email, cancellationToken);
         if (user is not null)
-            throw new ArgumentException($"User with email {email} already exists.");
+            return new KeyIsOccupied($"User with email {email} already exist");
 
         user = await _userRepository.GetUsersByLoginAsync(login, cancellationToken);
         if (user is not null)
-            throw new ArgumentException($"User with login {login} already exists.");
+            return new KeyIsOccupied($"User with login {login} already exist");
 
-        var defaultRoles = new List<Role>() { await _roleRepository.GetDefaultRoleAsync(cancellationToken) };
+        var defaultRoles = new List<Role> { await _roleRepository.GetDefaultRoleAsync(cancellationToken) };
 
         user = new User(email, login, password, null, defaultRoles);
         await _userRepository.CreateUserAsync(user, cancellationToken);
-        await _userRepository.SaveUserChangesAsync(cancellationToken);
+        await _userRepository.SaveChangesAsync(cancellationToken);
 
-        return user;
+        return new Created<User>(user);
     }
 }

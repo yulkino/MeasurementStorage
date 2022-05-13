@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 
 namespace Storage.Application.ExerciseMediator.GetExerciseStatistics;
 
-internal sealed class GetExerciseStatisticsQueryHandler : IRequestHandler<GetExerciseStatisticsQuery, List<Exercise>>
+internal sealed class GetExerciseStatisticsQueryHandler : IOperationHandler<GetExerciseStatisticsQuery>
 {
     private readonly IExerciseRepository _exerciseRepository;
 
@@ -13,7 +14,7 @@ internal sealed class GetExerciseStatisticsQueryHandler : IRequestHandler<GetExe
         _exerciseRepository = exerciseRepository;
     }
 
-    public Task<List<Exercise>> Handle(GetExerciseStatisticsQuery request, CancellationToken cancellationToken)
+    public Task<OperationResult> Handle(GetExerciseStatisticsQuery request, CancellationToken cancellationToken)
     {
         //TODO
         return null;

@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.UserData;
 
 namespace Storage.Application.UserMediator.GetUserList;
 
-internal sealed class GetUserListHandler : IRequestHandler<GetUserListQuery, List<User>>
+internal sealed class GetUserListHandler : IOperationHandler<GetUserListQuery>
 {
     private readonly IUserRepository _userRepository;
 
@@ -13,6 +14,9 @@ internal sealed class GetUserListHandler : IRequestHandler<GetUserListQuery, Lis
         _userRepository = userRepository;
     }
 
-    public Task<List<User>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
-        => _userRepository.GetAllUsersAsync(cancellationToken);
+    public async Task<OperationResult> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+    {
+        var users = await _userRepository.GetAllUsersAsync(cancellationToken);
+        return new Success<List<User>>(users);
+    }
 }

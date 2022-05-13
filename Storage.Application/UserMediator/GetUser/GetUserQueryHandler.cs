@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.UserData;
 
 namespace Storage.Application.UserMediator.GetUser;
 
-internal sealed class GetUserHandler : IRequestHandler<GetUserQuery, User>
+internal sealed class GetUserHandler : IOperationHandler<GetUserQuery>
 {
     private readonly IUserRepository _userRepository;
 
@@ -13,13 +13,13 @@ internal sealed class GetUserHandler : IRequestHandler<GetUserQuery, User>
         _userRepository = userRepository;
     }
 
-    public async Task<User> Handle(GetUserQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
         var userId = request.UserId;
         var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
         if (user is null)
-            throw new ArgumentException($"User with id {userId} not found");
+            return new DoesNotExist($"User with id {userId} not found");
 
-        return user;
+        return new Success<User>(user);
     }
 }

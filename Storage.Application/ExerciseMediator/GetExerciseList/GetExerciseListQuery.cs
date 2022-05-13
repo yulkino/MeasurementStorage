@@ -3,4 +3,4 @@ using Storage.Domain.ExerciseData;
 
 namespace Storage.Application.ExerciseMediator.GetExerciseList;
 
-public record GetExerciseListQuery : IRequest<List<Exercise>>;
+public record GetExerciseListQuery : IOperation;

@@ -1,6 +1,6 @@
 ﻿namespace Storage.Domain.ExerciseData;
 
-public sealed class TestCase //todo описание ошибки 
+public sealed class TestCase
 {
     public TestCase(Exercise exercise, string input, string output)
     {
@@ -11,7 +11,12 @@ public sealed class TestCase //todo описание ошибки
     }
 
     public Guid Id { get; init; }
-    public Exercise Exercise { get; }
-    public string Input { get; }
-    public string Output { get; }
+    public Exercise Exercise { get; set; }
+    public string Input { get; set; }
+    public string Output { get; set; }
+
+    private TestCase() { }
+
+    public string GetErrorMessage(string incorrectOutput)
+        => $"При входных данных {{{Input}}}, программа должна была вывести {{{Output}}}, а вывела {{{incorrectOutput}}}";
 }

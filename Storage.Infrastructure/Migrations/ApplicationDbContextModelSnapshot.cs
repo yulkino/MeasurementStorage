@@ -142,16 +142,6 @@ namespace Storage.Infrastructure.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<string>("InputData")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("OutputData")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -196,6 +186,30 @@ namespace Storage.Infrastructure.Migrations
                     b.ToTable("ExerciseResolve", (string)null);
                 });
 
+            modelBuilder.Entity("Storage.Domain.ExerciseData.TestCase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ExerciseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Input")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Output")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.ToTable("TestCase", (string)null);
+                });
+
             modelBuilder.Entity("Storage.Domain.UserData.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -236,6 +250,9 @@ namespace Storage.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -407,6 +424,17 @@ namespace Storage.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Storage.Domain.ExerciseData.TestCase", b =>
+                {
+                    b.HasOne("Storage.Domain.ExerciseData.Exercise", "Exercise")
+                        .WithMany("TestCases")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+                });
+
             modelBuilder.Entity("UserRoles", b =>
                 {
                     b.HasOne("Storage.Domain.UserData.Role", null)
@@ -425,6 +453,8 @@ namespace Storage.Infrastructure.Migrations
             modelBuilder.Entity("Storage.Domain.ExerciseData.Exercise", b =>
                 {
                     b.Navigation("ExerciseResolves");
+
+                    b.Navigation("TestCases");
                 });
 
             modelBuilder.Entity("Storage.Domain.UserData.User", b =>

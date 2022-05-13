@@ -5,4 +5,5 @@ namespace Storage.Application.ExerciseMediator.EditExercise;
 
 public record EditExerciseCommand(Guid ExerciseId, 
     string Title,
-    string Description) : IRequest<Exercise>;
+    string Description,
+    List<KeyValuePair<string, string>> TestCases) : IOperation;
