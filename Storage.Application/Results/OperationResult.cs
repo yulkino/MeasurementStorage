@@ -11,3 +11,4 @@ public sealed record Error(string ErrorMessage);
 public abstract record BadResult(string ErrorMessage) : ContentResult<Error>(new Error(ErrorMessage));
 public sealed record DoesNotExist(string ErrorMessage) : BadResult(ErrorMessage);
 public sealed record KeyIsOccupied(string ErrorMessage) : BadResult(ErrorMessage);
+public sealed record PasswordDoesNotExist(string ErrorMessage) : BadResult(ErrorMessage);

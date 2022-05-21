@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
 using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 
@@ -15,8 +14,5 @@ internal sealed class GetExerciseListQueryHandler : IOperationHandler<GetExercis
     }
 
     public async Task<OperationResult> Handle(GetExerciseListQuery request, CancellationToken cancellationToken)
-    {
-        var exercises = await _exerciseRepository.GetAllExercisesAsync(cancellationToken);
-        return new Success<List<Exercise>>(exercises);
-    }
+        => new Success<List<Exercise>>(await _exerciseRepository.GetAllExercisesAsync(cancellationToken));
 }

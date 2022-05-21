@@ -13,7 +13,7 @@ internal class RoleRepository : Repository, IRoleRepository
 
     public RoleRepository(ApplicationDbContext context) : base(context) { }
 
-    public Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken) 
+    public Task<List<Role>> GetRolesAsync(CancellationToken cancellationToken)
         => Context.Roles.ToListAsync(cancellationToken);
 
     public Task<Role> GetDefaultRoleAsync(CancellationToken cancellationToken)

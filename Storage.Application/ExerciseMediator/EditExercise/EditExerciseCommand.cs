@@ -1,9 +1,8 @@
-﻿using MediatR;
-using Storage.Domain.ExerciseData;
+﻿using Storage.Application.DTOs;
 
 namespace Storage.Application.ExerciseMediator.EditExercise;
 
-public record EditExerciseCommand(Guid ExerciseId, 
+public record EditExerciseCommand(Guid ExerciseId,
     string Title,
     string Description,
-    List<KeyValuePair<string, string>> TestCases) : IOperation;
+    List<TestCaseApplicationDto> TestCases) : IOperation;

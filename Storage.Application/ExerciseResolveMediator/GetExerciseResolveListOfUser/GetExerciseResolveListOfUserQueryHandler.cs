@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
+using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 
 namespace Storage.Application.ExerciseResolveMediator.GetExerciseResolveListOfUser;
 
-internal sealed class GetExerciseResolveListOfUserQueryHandler : IRequestHandler<GetExerciseResolveListOfUserQuery, List<ExerciseResolve>>
+internal sealed class GetExerciseResolveListOfUserQueryHandler : IOperationHandler<GetExerciseResolveListOfUserQuery>
 {
     private readonly IExerciseResolveRepository _exerciseResolveRepository;
     private readonly IUserRepository _userRepository;
@@ -15,7 +15,7 @@ internal sealed class GetExerciseResolveListOfUserQueryHandler : IRequestHandler
         _userRepository = userRepository;
     }
 
-    public async Task<List<ExerciseResolve>> Handle(GetExerciseResolveListOfUserQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(GetExerciseResolveListOfUserQuery request, CancellationToken cancellationToken)
     {
         var userId = request.UserId;
         var user = await _userRepository.GetUserByIdAsync(userId, cancellationToken);
@@ -24,6 +24,6 @@ internal sealed class GetExerciseResolveListOfUserQueryHandler : IRequestHandler
 
         var exerciseResolves = await _exerciseResolveRepository.GetExerciseResolvesByUserAsync(user, cancellationToken);
 
-        return exerciseResolves;
+        return new Success<List<ExerciseResolve>>(exerciseResolves);
     }
 }

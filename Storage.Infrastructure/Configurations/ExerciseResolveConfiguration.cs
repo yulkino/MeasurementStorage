@@ -23,7 +23,7 @@ internal class ExerciseResolveConfiguration : IEntityTypeConfiguration<ExerciseR
             .IsRequired()
             .HasMaxLength(10000);
 
-        builder.Property(e=> e.SendingDate)
+        builder.Property(e => e.SendingDate)
             .IsRequired();
 
         builder.Property(e => e.ExecutionTime)

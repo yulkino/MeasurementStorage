@@ -1,6 +1,6 @@
 ﻿using Storage.Domain.ExerciseData;
 
-namespace Storage.Application; 
+namespace Storage.Application;
 
 internal interface IResolveTimeMeasurer //TODO - implement
 {

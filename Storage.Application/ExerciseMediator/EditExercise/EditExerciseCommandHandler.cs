@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
 using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 
@@ -18,7 +17,7 @@ internal sealed class EditExerciseCommandHandler : IOperationHandler<EditExercis
 
     public async Task<OperationResult> Handle(EditExerciseCommand request, CancellationToken cancellationToken)
     {
-        var (exerciseId, newTitle, newDescription, newTestCases)  = request;
+        var (exerciseId, newTitle, newDescription, newTestCases) = request;
 
         var exercise = await _exerciseRepository.GetExerciseByIdAsync(exerciseId, cancellationToken);
         if (exercise is null)

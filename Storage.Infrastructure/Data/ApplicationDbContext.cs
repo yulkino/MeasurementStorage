@@ -14,8 +14,8 @@ public sealed class ApplicationDbContext : IdentityDbContext<User, Role, Guid>
     public DbSet<ExerciseResolve> ExercisesResolves { get; set; }
     public DbSet<TestCase> TestCases { get; set; }
 
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions) 
-        : base(dbContextOptions) 
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> dbContextOptions)
+        : base(dbContextOptions)
     {
         Database.EnsureCreated();
     }

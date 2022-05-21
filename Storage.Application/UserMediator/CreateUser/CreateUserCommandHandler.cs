@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
 using Storage.Application.Results;
 using Storage.Domain.UserData;
 
@@ -9,11 +8,13 @@ internal sealed class CreateUserCommandHandler : IOperationHandler<CreateUserCom
 {
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public CreateUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository)
+    public CreateUserCommandHandler(IUserRepository userRepository, IRoleRepository roleRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
         _roleRepository = roleRepository;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<OperationResult> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -24,13 +25,15 @@ internal sealed class CreateUserCommandHandler : IOperationHandler<CreateUserCom
         if (user is not null)
             return new KeyIsOccupied($"User with email {email} already exist");
 
-        user = await _userRepository.GetUsersByLoginAsync(login, cancellationToken);
+        user = await _userRepository.GetUserByLoginAsync(login, cancellationToken);
         if (user is not null)
             return new KeyIsOccupied($"User with login {login} already exist");
 
         var defaultRoles = new List<Role> { await _roleRepository.GetDefaultRoleAsync(cancellationToken) };
 
-        user = new User(email, login, password, null, defaultRoles);
+        var passwordHash = _passwordHasher.Hash(password);
+
+        user = new User(email, login, passwordHash, null, defaultRoles);
         await _userRepository.CreateUserAsync(user, cancellationToken);
         await _userRepository.SaveChangesAsync(cancellationToken);
 

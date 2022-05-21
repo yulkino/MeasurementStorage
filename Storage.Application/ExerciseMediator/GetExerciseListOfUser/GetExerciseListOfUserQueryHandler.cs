@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
 using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
 

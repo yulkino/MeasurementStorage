@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Storage.Api.DTOs.UserDtos;
 using Storage.Application.Results;
 using Storage.Application.UserMediator.CreateUser;
+using Storage.Application.UserMediator.DeleteUser;
+using Storage.Application.UserMediator.EditUser;
+using Storage.Application.UserMediator.EditUserRole;
+using Storage.Application.UserMediator.GetUser;
+using Storage.Application.UserMediator.GetUserList;
+using Storage.Application.UserMediator.GetUserListByEmailOrLoginPart;
+using Storage.Application.UserMediator.LoginUser;
 using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
@@ -28,20 +35,41 @@ public class UserController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsers()
     {
-
+        var query = new GetUserListQuery();
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            Success<List<ShortUserDto>> success => Ok(_mapper.Map<List<ShortUserDto>>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
-    [HttpGet]
-    public async Task<ActionResult<UserDto>> GetUser([FromRoute] Guid id)
+    [HttpGet("/{userId}")]
+    public async Task<ActionResult<UserDto>> GetUser([FromRoute] Guid userId)
     {
-
+        var query = new GetUserQuery(userId);
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            Success<User> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
     [AllowAnonymous]
     [HttpGet]
-    public async Task<ActionResult<UserDto>> Login([FromRoute] UserLoginDto userLoginDto)
+    public async Task<ActionResult<UserDto>> Login([FromBody] UserLoginDto userLoginDto)
     {
-
+        var query = new LoginUserQuery(userLoginDto.Login, userLoginDto.Password);
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            PasswordDoesNotExist passwordDoesNotExist => BadRequest(passwordDoesNotExist.Content),
+            Success<User> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
     [AllowAnonymous]
@@ -58,29 +86,58 @@ public class UserController : ControllerBase
         };
     }
 
-    [HttpDelete]
+
     [Authorize(Roles = "Admin")]
+    [HttpDelete("/{userId}")]
     public async Task<ActionResult> DeleteUser([FromRoute] Guid userId)
     {
-
+        var command = new DeleteUserCommand(userId);
+        var response = await _mediator.Send(command);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            WithoutContent withoutContent => NoContent(),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
-    [HttpPut]
-    public async Task<ActionResult<UserDto>> EditUser([FromRoute] Guid userId, [FromBody] UserLoginDto user)
+    [HttpPut("/{userId}")]
+    public async Task<ActionResult<UserDto>> EditUser([FromRoute] Guid userId, [FromBody] UserEditionDto user)
     {
-
+        var command = new EditUserCommand(userId, user.Login, user.Password, user.AvatarUrl);
+        var response = await _mediator.Send(command);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            Success<User> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
-    [HttpGet]
+    [HttpGet("/{textPart}")]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsersByEmailOrLoginPart([FromRoute] string textPart)
     {
-
+        var query = new GetUserListByEmailOrLoginPartQuery(textPart);
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            Success<List<User>> success => Ok(_mapper.Map<List<UserDto>>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 
-    [HttpPut]
     [Authorize(Roles = "Admin")]
+    [HttpPut("/{userId}")]
     public async Task<ActionResult<UserDto>> EditUserRole([FromRoute] Guid userId, [FromBody] UserRoleDto role)
     {
-
+        var command = new EditUserRoleCommand(userId, _mapper.Map<List<NewRole>>(role.Roles));
+        var response = await _mediator.Send(command);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            KeyIsOccupied keyIsOccupied => BadRequest(keyIsOccupied),
+            Success<UserDto> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
     }
 }

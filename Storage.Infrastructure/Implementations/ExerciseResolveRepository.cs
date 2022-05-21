@@ -17,7 +17,11 @@ internal class ExerciseResolveRepository : Repository, IExerciseResolveRepositor
         => Context.ExercisesResolves.FindAsync(id, cancellationToken).AsTask();
 
     public Task<List<ExerciseResolve>> GetExerciseResolvesByUserAsync(User user, CancellationToken cancellationToken)
-        => Context.ExercisesResolves.Where(e => e.User == user).ToListAsync(cancellationToken);
+        => Context.ExercisesResolves
+            .Where(o => o == Context.ExercisesResolves
+                .OrderBy(x => x.ExecutionTime)
+                .FirstOrDefault(x => x.User == user && x.Exercise == o.Exercise))
+            .ToListAsync(cancellationToken);
 
     public Task SaveExerciseResolveChangesAsync(CancellationToken cancellationToken)
         => Context.SaveChangesAsync(cancellationToken);

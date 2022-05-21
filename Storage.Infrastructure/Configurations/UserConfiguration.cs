@@ -19,10 +19,6 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.Property(u => u.Password)
-            .IsRequired()
-            .HasMaxLength(200);
-            
         builder.HasIndex(u => u.Email)
             .IsUnique();
 
@@ -36,9 +32,5 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.CreatedExercises)
             .WithOne(e => e.Author)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasMany(u => u.Roles) //todo возможно таблица не нужна // это связь многие-ко-многим кроме как через таблицу она не делается
-            .WithMany(r => r.Users)
-            .UsingEntity("UserRoles");
     }
 }

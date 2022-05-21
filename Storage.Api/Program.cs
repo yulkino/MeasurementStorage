@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Storage.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +9,13 @@ services.AddInfrastructure(builder.Configuration.GetConnectionString("Measuremen
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c => {
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    c.IgnoreObsoleteActions();
+    c.IgnoreObsoleteProperties();
+    c.CustomSchemaIds(type => type.FullName);
+});
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Storage.Application.Repositories;
+﻿using Storage.Application.Repositories;
 using Storage.Application.Results;
 using Storage.Domain.UserData;
 
@@ -15,8 +14,5 @@ internal sealed class GetRoleListQueryHandler : IOperationHandler<GetRoleListQue
     }
 
     public async Task<OperationResult> Handle(GetRoleListQuery request, CancellationToken cancellationToken)
-    {
-        var roles = await _roleRepository.GetRolesAsync(cancellationToken);
-        return new Success<List<Role>>(roles);
-    }
+        => new Success<List<Role>>(await _roleRepository.GetRolesAsync(cancellationToken));
 }

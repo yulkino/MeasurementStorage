@@ -9,11 +9,17 @@ internal class UserRepository : Repository, IUserRepository
 {
     public UserRepository(ApplicationDbContext context) : base(context) { }
 
-    public Task CreateUserAsync(User user, CancellationToken cancellationToken) 
+    public Task CreateUserAsync(User user, CancellationToken cancellationToken)
         => Context.Users.AddAsync(user, cancellationToken).AsTask();
 
-    public Task DeleteUserAsync(User user, CancellationToken cancellationToken) 
+    public Task DeleteUserAsync(User user, CancellationToken cancellationToken)
         => Task.FromResult(Context.Users.Remove(user));
+
+    public Task<List<User>> GetUsersByEmailOrLoginPartAsync(string textPart, CancellationToken cancellationToken)
+        => Context.Users.Where(u =>
+                EF.Functions.Like(u.Login, $"%{textPart}%")
+                || EF.Functions.Like(u.Email, $"%{textPart}%"))
+            .ToListAsync(cancellationToken);
 
     public Task<List<User>> GetAllUsersAsync(CancellationToken cancellationToken)
         => Context.Users.ToListAsync(cancellationToken);
@@ -24,12 +30,6 @@ internal class UserRepository : Repository, IUserRepository
     public Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
         => Context.Users.FindAsync(id, cancellationToken).AsTask();
 
-    public Task<List<User>> GetUsersByEmailPartAsync(string emailPart, CancellationToken cancellationToken)
-        => Context.Users.Where(u => u.Email.Contains(emailPart)).ToListAsync(cancellationToken);
-
-    public Task<User?> GetUsersByLoginAsync(string login, CancellationToken cancellationToken)
+    public Task<User?> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
         => Context.Users.FindAsync(login, cancellationToken).AsTask();
-
-    public Task<List<User>> GetUsersByLoginPartAsync(string loginPart, CancellationToken cancellationToken)
-        => Context.Users.Where(u => u.Login.Contains(loginPart)).ToListAsync(cancellationToken);
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -29,7 +28,6 @@ namespace Storage.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Login = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -179,7 +177,7 @@ namespace Storage.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
+                name: "RoleUser",
                 columns: table => new
                 {
                     RolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -187,15 +185,15 @@ namespace Storage.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.RolesId, x.UsersId });
+                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_UserRoles_Role_RolesId",
+                        name: "FK_RoleUser_Role_RolesId",
                         column: x => x.RolesId,
                         principalTable: "Role",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_User_UsersId",
+                        name: "FK_RoleUser_User_UsersId",
                         column: x => x.UsersId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -297,6 +295,11 @@ namespace Storage.Infrastructure.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoleUser_UsersId",
+                table: "RoleUser",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TestCase_ExerciseId",
                 table: "TestCase",
                 column: "ExerciseId");
@@ -324,11 +327,6 @@ namespace Storage.Infrastructure.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_UsersId",
-                table: "UserRoles",
-                column: "UsersId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -352,16 +350,16 @@ namespace Storage.Infrastructure.Migrations
                 name: "ExerciseResolve");
 
             migrationBuilder.DropTable(
+                name: "RoleUser");
+
+            migrationBuilder.DropTable(
                 name: "TestCase");
 
             migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "Exercise");
-
-            migrationBuilder.DropTable(
-                name: "Role");
 
             migrationBuilder.DropTable(
                 name: "User");

@@ -5,18 +5,17 @@ namespace Storage.Domain.UserData;
 
 public sealed class User : IdentityUser<Guid>
 {
-    public User(string email, string login, string password, string? avatarUrl, List<Role> roles)
+    public User(string email, string login, string passwordHash, string? avatarUrl, List<Role> roles)
     {
         Id = Guid.NewGuid();
         Email = email;
         Login = login;
-        Password = password;
+        PasswordHash = passwordHash;
         AvatarUrl = avatarUrl;
         Roles = roles;
     }
 
     public string Login { get; set; }
-    public string Password { get; set; }
     public string? AvatarUrl { get; set; }
     public IEnumerable<Role> Roles { get; set; }
     public IEnumerable<Exercise> CreatedExercises { get; set; }

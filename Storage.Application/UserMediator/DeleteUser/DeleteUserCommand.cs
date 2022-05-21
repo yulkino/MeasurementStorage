@@ -1,5 +1,3 @@
-﻿using MediatR;
-
-namespace Storage.Application.UserMediator.DeleteUser;
+﻿namespace Storage.Application.UserMediator.DeleteUser;
 
 public record DeleteUserCommand(Guid UserId) : IOperation;

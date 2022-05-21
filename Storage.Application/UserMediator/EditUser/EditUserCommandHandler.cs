@@ -7,10 +7,12 @@ namespace Storage.Application.UserMediator.EditUser;
 internal sealed class EditUserCommandHandler : IOperationHandler<EditUserCommand>
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public EditUserCommandHandler(IUserRepository userRepository)
+    public EditUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<OperationResult> Handle(EditUserCommand request, CancellationToken cancellationToken)
@@ -21,9 +23,12 @@ internal sealed class EditUserCommandHandler : IOperationHandler<EditUserCommand
         if (user is null)
             return new DoesNotExist($"User with id {userId} not found");
 
-        user.Login = newLogin;
-        user.Password = newPassword;
-        user.AvatarUrl = newAvatarUrl;
+        user.Login = newLogin ?? user.Login;
+        user.AvatarUrl = newAvatarUrl ?? user.AvatarUrl;
+
+        if (newPassword is not null)
+            user.PasswordHash = _passwordHasher.Hash(newPassword);
+
         await _userRepository.SaveChangesAsync(cancellationToken);
 
         return new Success<User>(user);

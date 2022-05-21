@@ -1,5 +1,5 @@
 ﻿using Storage.Api.DTOs.ExerciseDtos;
-using Storage.Api.DTOs.User;
+using Storage.Api.DTOs.UserDtos;
 
 namespace Storage.Api.DTOs.ExerciseResolveDtos;
 

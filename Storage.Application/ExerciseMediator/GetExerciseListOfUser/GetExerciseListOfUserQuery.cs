@@ -1,6 +1,3 @@
-﻿using MediatR;
-using Storage.Domain.ExerciseData;
-
-namespace Storage.Application.ExerciseMediator.GetExerciseListOfUser;
+﻿namespace Storage.Application.ExerciseMediator.GetExerciseListOfUser;
 
 public record GetExerciseListOfUserQuery(Guid UserId) : IOperation;

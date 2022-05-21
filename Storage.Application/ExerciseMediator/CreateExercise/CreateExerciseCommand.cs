@@ -1,11 +1,10 @@
-﻿using MediatR;
-using Storage.Domain.ExerciseData;
+﻿using Storage.Application.DTOs;
 
 namespace Storage.Application.ExerciseMediator.CreateExercise;
 
 public record CreateExerciseCommand(
     string Title,
     string Description,
-    List<KeyValuePair<string, string>> TestCases,
+    List<TestCaseApplicationDto> TestCases,
     Guid AuthorId,
     DateTime CreationDate) : IOperation;

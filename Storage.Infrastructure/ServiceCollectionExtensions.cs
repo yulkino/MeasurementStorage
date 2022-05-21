@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Storage.Application;
 using Storage.Application.Repositories;
 using Storage.Domain.UserData;
 using Storage.Infrastructure.Data;
@@ -12,14 +13,16 @@ public static class ServiceCollectionExtensions
 {
     public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
-        services.AddIdentity<User, Role>()
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString))
+            .AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddUserStore<UserStore<User, Role, ApplicationDbContext, Guid>>()
-            .AddRoleStore<RoleStore<Role, ApplicationDbContext, Guid>>();
-        services.AddScoped<IRoleRepository, RoleRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IExerciseRepository, ExerciseRepository>();
-        services.AddScoped<IExerciseResolveRepository, ExerciseResolveRepository>();
+            .AddRoleStore<RoleStore<Role, ApplicationDbContext, Guid>>()
+            .Services
+            .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<IUserRepository, UserRepository>()
+            .AddScoped<IExerciseRepository, ExerciseRepository>()
+            .AddScoped<IExerciseResolveRepository, ExerciseResolveRepository>()
+            .AddScoped<IPasswordHasher, PasswordHasher>();
     }
 }
