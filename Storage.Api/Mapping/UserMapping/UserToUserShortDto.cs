@@ -10,6 +10,7 @@ internal sealed class UserToUserShortDto : Profile
     {
         CreateMap<User, ShortUserDto>()
             .ForMember(dto => dto.Id, o => o.MapFrom(u => u.Id))
-            .ForMember(dto => dto.Login, o => o.MapFrom(u => u.Login));
+            .ForMember(dto => dto.Login, o => o.MapFrom(u => u.Login))
+            .ForMember(dto => dto.AvatarUrl, o => o.MapFrom(u => u.AvatarUrl));
     }
 }

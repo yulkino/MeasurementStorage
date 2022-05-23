@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Storage.Api.DTOs.ExerciseResolveDtos;
 using Storage.Application.ExerciseResolveMediator.CreateExerciseResolve;
+using Storage.Application.ExerciseResolveMediator.GetBetterExerciseResolveAndOtherVersionList;
+using Storage.Application.ExerciseResolveMediator.GetConcreteExerciseResolveAndOtherVersionList;
 using Storage.Application.ExerciseResolveMediator.GetExerciseResolveListOfUser;
 using Storage.Application.Results;
 using Storage.Domain.ExerciseData;
@@ -24,7 +26,33 @@ public class ExerciseResolveController : ControllerBase
         _mediator = mediator;
     }
 
-    //todo контроллер, который по userId exerciseId DateTIme будет отдавать ExerciseResolve
+    [HttpGet("/{userid}/{exerciseId}/{sendingDate}")]
+    public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetConcreteExerciseResolveAndOtherVersions(
+        [FromRoute] Guid userId, [FromRoute] Guid exerciseId, [FromRoute] DateTime sendingDate)
+    {
+        var query = new GetConcreteExerciseResolveAndOtherVersionListQuery(userId, exerciseId, sendingDate);
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            Success<(ExerciseResolve, List<ExerciseResolve>)> success => Ok(_mapper.Map<VersionControlExerciseResolvesDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
+    }
+
+    [HttpGet("/{userid}/{exerciseId}")]
+    public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetBetterExerciseResolveAndOtherVersions(
+        [FromRoute] Guid userId, [FromRoute] Guid exerciseId)
+    {
+        var query = new GetBetterExerciseResolveAndOtherVersionListQuery(userId, exerciseId);
+        var response = await _mediator.Send(query);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            Success<(ExerciseResolve, List<ExerciseResolve>)> success => Ok(_mapper.Map<VersionControlExerciseResolvesDto>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
+    }
 
     [HttpGet("/{userId}")]
     public async Task<ActionResult<List<ExerciseResolveDto>>> GetExerciseResolvesOfUser([FromRoute] Guid userId)

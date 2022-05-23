@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Storage.Api.DTOs.Exercise;
 using Storage.Api.DTOs.ExerciseDtos;
 using Storage.Application.DTOs;
 using Storage.Application.ExerciseMediator.CreateExercise;
@@ -33,13 +34,13 @@ public class ExerciseController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Default")]
-    public async Task<ActionResult<List<ExerciseDto>>> GetExercises()
+    public async Task<ActionResult<List<ShortExerciseDto>>> GetExercises()
     {
         var query = new GetExerciseListQuery();
         var response = await _mediator.Send(query);
         return response switch
         {
-            Success<List<Exercise>> success => Ok(_mapper.Map<List<ExerciseDto>>(success.Content)),
+            Success<List<(Exercise, int)>> success => Ok(_mapper.Map<List<ShortExerciseDto>>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }
@@ -95,7 +96,7 @@ public class ExerciseController : ControllerBase
         return response switch
         {
             DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
-            Success<ExerciseDto> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
+            Success<Exercise> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }

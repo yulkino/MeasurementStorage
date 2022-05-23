@@ -2,9 +2,6 @@
 
 namespace Storage.Domain.ExerciseData;
 
-/// <summary>
-/// 
-/// </summary>
 public sealed class ExerciseResolve
 {
     public ExerciseResolve(Exercise exercise, User user, string resolve, DateTime sendingDate, double executionTime)

@@ -25,7 +25,7 @@ internal class ExerciseRepository : Repository, IExerciseRepository
     public Task<Exercise?> GetExerciseByIdAsync(Guid id, CancellationToken cancellationToken)
         => Context.Exercises.FindAsync(id, cancellationToken).AsTask();
 
-    public Task GetResolvesCount(Exercise exercise, CancellationToken cancellationToken)
+    public Task<int> GetResolvesCount(Exercise exercise, CancellationToken cancellationToken)
         => Context.ExercisesResolves.Where(e => e.Exercise == exercise).CountAsync(cancellationToken);
 
     public Task<List<Exercise>> GetExercisesByTitlePart(string titlePart, CancellationToken cancellationToken)

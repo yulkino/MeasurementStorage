@@ -1,6 +1,6 @@
 ﻿namespace Storage.Application.ExerciseResolveMediator.CreateExerciseResolve;
 
-public record CreateExerciseResolveCommand(
+public sealed record CreateExerciseResolveCommand(
     Guid ExerciseId,
     Guid UserId,
     string Resolve,

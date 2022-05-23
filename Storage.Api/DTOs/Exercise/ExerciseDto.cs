@@ -9,5 +9,4 @@ public sealed record ExerciseDto(
     string Description,
     List<TestCaseDto> TestCases,
     ShortUserDto Author,
-    DateTime CreationDate,
-    int ExerciseCount);
+    DateTime CreationDate);
