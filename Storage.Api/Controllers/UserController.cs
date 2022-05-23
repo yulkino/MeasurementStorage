@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Storage.Api.DTOs.ExerciseDtos;
 using Storage.Api.DTOs.UserDtos;
+using Storage.Application.ExerciseMediator.GetExerciseListOfUser;
 using Storage.Application.Results;
 using Storage.Application.UserMediator.CreateUser;
 using Storage.Application.UserMediator.DeleteUser;
@@ -12,6 +14,7 @@ using Storage.Application.UserMediator.GetUser;
 using Storage.Application.UserMediator.GetUserList;
 using Storage.Application.UserMediator.GetUserListByEmailOrLoginPart;
 using Storage.Application.UserMediator.LoginUser;
+using Storage.Domain.ExerciseData;
 using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
@@ -44,7 +47,7 @@ public class UserController : ControllerBase
         };
     }
 
-    [HttpGet("/{userId}")]
+    [HttpGet("{userId}")]
     public async Task<ActionResult<UserDto>> GetUser([FromRoute] Guid userId)
     {
         var query = new GetUserQuery(userId);
@@ -58,7 +61,7 @@ public class UserController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet("Login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] UserLoginDto userLoginDto)
     {
         var query = new LoginUserQuery(userLoginDto.Login, userLoginDto.Password);
@@ -88,7 +91,7 @@ public class UserController : ControllerBase
 
 
     [Authorize(Roles = "Admin")]
-    [HttpDelete("/{userId}")]
+    [HttpDelete("{userId}")]
     public async Task<ActionResult> DeleteUser([FromRoute] Guid userId)
     {
         var command = new DeleteUserCommand(userId);
@@ -101,7 +104,7 @@ public class UserController : ControllerBase
         };
     }
 
-    [HttpPut("/{userId}")]
+    [HttpPut("{userId}")]
     public async Task<ActionResult<UserDto>> EditUser([FromRoute] Guid userId, [FromBody] UserEditionDto user)
     {
         var command = new EditUserCommand(userId, user.Login, user.Password, user.AvatarUrl);
@@ -114,7 +117,7 @@ public class UserController : ControllerBase
         };
     }
 
-    [HttpGet("/{textPart}")]
+    [HttpGet("{textPart}")]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsersByEmailOrLoginPart([FromRoute] string textPart)
     {
         var query = new GetUserListByEmailOrLoginPartQuery(textPart);
@@ -126,17 +129,15 @@ public class UserController : ControllerBase
         };
     }
 
-    [Authorize(Roles = "Admin")]
-    [HttpPut("/{userId}")]
-    public async Task<ActionResult<UserDto>> EditUserRole([FromRoute] Guid userId, [FromBody] UserRoleDto role)
+    [HttpGet("{userId}/Exercises")]
+    public async Task<ActionResult<ExerciseDto>> GetExercisesOfUser([FromRoute] Guid userId)
     {
-        var command = new EditUserRoleCommand(userId, _mapper.Map<List<NewRole>>(role.Roles));
-        var response = await _mediator.Send(command);
+        var query = new GetExerciseListOfUserQuery(userId);
+        var response = await _mediator.Send(query);
         return response switch
         {
             DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
-            KeyIsOccupied keyIsOccupied => BadRequest(keyIsOccupied),
-            Success<UserDto> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            Success<List<Exercise>> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }

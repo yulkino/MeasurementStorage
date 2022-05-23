@@ -45,7 +45,7 @@ public class ExerciseController : ControllerBase
         };
     }
 
-    [HttpGet("/{exerciseId}")]
+    [HttpGet("{exerciseId}")]
     [Authorize(Roles = "Default")]
     public async Task<ActionResult<ExerciseDto>> GetExercise([FromRoute] Guid exerciseId)
     {
@@ -55,19 +55,6 @@ public class ExerciseController : ControllerBase
         {
             DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
             Success<Exercise> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
-            _ => throw new ArgumentException("Unexpected result")
-        };
-    }
-
-    [HttpGet("/{userId}")]
-    public async Task<ActionResult<ExerciseDto>> GetExercisesOfUser([FromRoute] Guid userId)
-    {
-        var query = new GetExerciseListOfUserQuery(userId);
-        var response = await _mediator.Send(query);
-        return response switch
-        {
-            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
-            Success<List<Exercise>> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }
@@ -87,7 +74,7 @@ public class ExerciseController : ControllerBase
         };
     }
 
-    [HttpPut("/{exerciseId}")]
+    [HttpPut("{exerciseId}")]
     public async Task<ActionResult<ExerciseDto>> EditExercise([FromRoute] Guid exerciseId, [FromBody] ExerciseEditionDto exerciseEditionDto)
     {
         var command = new EditExerciseCommand(exerciseId, exerciseEditionDto.Title, exerciseEditionDto.Description,
@@ -101,7 +88,7 @@ public class ExerciseController : ControllerBase
         };
     }
 
-    [HttpDelete("/{exerciseId}")]
+    [HttpDelete("{exerciseId}")]
     public async Task<ActionResult> DeleteExercise([FromRoute] Guid exerciseId)
     {
         var command = new DeleteExerciseCommand(exerciseId);
@@ -115,7 +102,7 @@ public class ExerciseController : ControllerBase
     }
 
     [Authorize(Roles = "Default")]
-    [HttpGet("/{exerciseId}")]
+    [HttpGet("{exerciseId}/LeaderBoard")]
     public async Task<ActionResult> GetExerciseLeaderBoard([FromRoute] Guid exerciseId)
     {
         var query = new GetExerciseLeaderBoardQuery(exerciseId);
@@ -127,7 +114,7 @@ public class ExerciseController : ControllerBase
     }
 
     [Authorize(Roles = "Default")]
-    [HttpGet("/{exerciseId}")]
+    [HttpGet("{exerciseId}/Statistics")]
     public async Task<ActionResult> GetExerciseStatistics([FromRoute] Guid exerciseId)
     {
         var query = new GetExerciseStatisticsQuery(exerciseId);

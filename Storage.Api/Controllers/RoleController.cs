@@ -3,8 +3,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Storage.Api.DTOs.RoleDtos;
+using Storage.Api.DTOs.UserDtos;
 using Storage.Application.Results;
 using Storage.Application.RoleMediator.GetRoleList;
+using Storage.Application.UserMediator.EditUserRole;
 using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
@@ -32,6 +34,21 @@ public class RoleController : ControllerBase
         return response switch
         {
             Success<List<Role>> success => Ok(_mapper.Map<List<RoleDto>>(success.Content)),
+            _ => throw new ArgumentException("Unexpected result")
+        };
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut("{userId}")]
+    public async Task<ActionResult<UserDto>> EditUserRole([FromRoute] Guid userId, [FromBody] UserRoleDto role)
+    {
+        var command = new EditUserRoleCommand(userId, _mapper.Map<List<NewRole>>(role.Roles));
+        var response = await _mediator.Send(command);
+        return response switch
+        {
+            DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
+            KeyIsOccupied keyIsOccupied => BadRequest(keyIsOccupied),
+            Success<UserDto> success => Ok(_mapper.Map<UserDto>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }

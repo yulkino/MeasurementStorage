@@ -10,14 +10,6 @@ services.AddInfrastructure(builder.Configuration.GetConnectionString("Measuremen
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-    c.IgnoreObsoleteActions();
-    c.IgnoreObsoleteProperties();
-    c.CustomSchemaIds(type => type.FullName);
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

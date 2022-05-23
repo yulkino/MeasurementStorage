@@ -26,7 +26,7 @@ public class ExerciseResolveController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("/{userid}/{exerciseId}/{sendingDate}")]
+    [HttpGet("{userid}/{exerciseId}/{sendingDate}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetConcreteExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId, [FromRoute] DateTime sendingDate)
     {
@@ -40,7 +40,7 @@ public class ExerciseResolveController : ControllerBase
         };
     }
 
-    [HttpGet("/{userid}/{exerciseId}")]
+    [HttpGet("{userid}/{exerciseId}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetBetterExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId)
     {
@@ -54,7 +54,7 @@ public class ExerciseResolveController : ControllerBase
         };
     }
 
-    [HttpGet("/{userId}")]
+    [HttpGet("{userId}")]
     public async Task<ActionResult<List<ExerciseResolveDto>>> GetExerciseResolvesOfUser([FromRoute] Guid userId)
     {
         var query = new GetExerciseResolveListOfUserQuery(userId);
