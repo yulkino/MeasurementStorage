@@ -12,9 +12,11 @@ using Storage.Domain.ExerciseData;
 
 namespace Storage.Api.Controllers;
 
+//TODO authorization
+
 [ApiController]
 [Route("[controller]")]
-[Authorize(Roles = "Default")]
+//[Authorize(Roles = "Default")]
 public class ExerciseResolveController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -26,6 +28,7 @@ public class ExerciseResolveController : ControllerBase
         _mediator = mediator;
     }
 
+    //todo check
     [HttpGet("{userid}/{exerciseId}/{sendingDate}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetConcreteExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId, [FromRoute] DateTime sendingDate)
@@ -40,6 +43,7 @@ public class ExerciseResolveController : ControllerBase
         };
     }
 
+    //todo check
     [HttpGet("{userid}/{exerciseId}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetBetterExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId)
@@ -54,6 +58,7 @@ public class ExerciseResolveController : ControllerBase
         };
     }
 
+    //todo check
     [HttpGet("{userId}")]
     public async Task<ActionResult<List<ExerciseResolveDto>>> GetExerciseResolvesOfUser([FromRoute] Guid userId)
     {
@@ -69,8 +74,8 @@ public class ExerciseResolveController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ExerciseResolveDto>> CreateExerciseResolve([FromBody] ExerciseResolveCreationDto exerciseResolveCreationDto)
     {
-        var command = new CreateExerciseResolveCommand(exerciseResolveCreationDto.Exercise.Id,
-            exerciseResolveCreationDto.User.Id, exerciseResolveCreationDto.Resolve,
+        var command = new CreateExerciseResolveCommand(exerciseResolveCreationDto.ExerciseId,
+            exerciseResolveCreationDto.UserId, exerciseResolveCreationDto.Resolve,
             exerciseResolveCreationDto.SendingDate);
         var response = await _mediator.Send(command);
         return response switch

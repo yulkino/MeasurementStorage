@@ -17,11 +17,14 @@ internal class RoleRepository : Repository, IRoleRepository
         => Context.Roles.ToListAsync(cancellationToken);
 
     public Task<Role> GetDefaultRoleAsync(CancellationToken cancellationToken)
-        => Context.Roles.FindAsync(_defaultRoleName, cancellationToken).AsTask()!;
+        => GetRoleASync(_defaultRoleName, cancellationToken);
 
     public Task<Role> GetEditorRoleAsync(CancellationToken cancellationToken)
-        => Context.Roles.FindAsync(_editorRoleName, cancellationToken).AsTask()!;
+        => GetRoleASync(_editorRoleName, cancellationToken);
 
     public Task<Role> GetAdminRoleAsync(CancellationToken cancellationToken)
-        => Context.Roles.FindAsync(_adminRoleName, cancellationToken).AsTask()!;
+        => GetRoleASync(_adminRoleName, cancellationToken);
+
+    private Task<Role> GetRoleASync(string roleName, CancellationToken cancellationToken)
+        => Context.Roles.FirstOrDefaultAsync(r => r.Name == roleName, cancellationToken)!;
 }

@@ -19,10 +19,10 @@ using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
 
-
+//TODO authorization
 [ApiController]
 [Route("[controller]")]
-[Authorize(Roles = "Default")]
+//[Authorize(Roles = "Default")]
 public class UserController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsers()
     {
@@ -42,7 +42,7 @@ public class UserController : ControllerBase
         var response = await _mediator.Send(query);
         return response switch
         {
-            Success<List<ShortUserDto>> success => Ok(_mapper.Map<List<ShortUserDto>>(success.Content)),
+            Success<List<User>> success => Ok(_mapper.Map<List<ShortUserDto>>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }
@@ -60,8 +60,8 @@ public class UserController : ControllerBase
         };
     }
 
-    [AllowAnonymous]
-    [HttpGet("Login")]
+    //[AllowAnonymous]
+    [HttpPost("Login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] UserLoginDto userLoginDto)
     {
         var query = new LoginUserQuery(userLoginDto.Login, userLoginDto.Password);
@@ -75,7 +75,7 @@ public class UserController : ControllerBase
         };
     }
 
-    [AllowAnonymous]
+    //[AllowAnonymous]
     [HttpPost]
     public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreationDto user)
     {
@@ -90,7 +90,7 @@ public class UserController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpDelete("{userId}")]
     public async Task<ActionResult> DeleteUser([FromRoute] Guid userId)
     {
@@ -117,7 +117,7 @@ public class UserController : ControllerBase
         };
     }
 
-    [HttpGet("{textPart}")]
+    [HttpGet("ByEmailOrLoginPart/{textPart}")]
     public async Task<ActionResult<List<ShortUserDto>>> GetUsersByEmailOrLoginPart([FromRoute] string textPart)
     {
         var query = new GetUserListByEmailOrLoginPartQuery(textPart);
@@ -130,14 +130,14 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{userId}/Exercises")]
-    public async Task<ActionResult<ExerciseDto>> GetExercisesOfUser([FromRoute] Guid userId)
+    public async Task<ActionResult<List<ExerciseDto>>> GetExercisesOfUser([FromRoute] Guid userId)
     {
         var query = new GetExerciseListOfUserQuery(userId);
         var response = await _mediator.Send(query);
         return response switch
         {
             DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
-            Success<List<Exercise>> success => Ok(_mapper.Map<ExerciseDto>(success.Content)),
+            Success<List<Exercise>> success => Ok(_mapper.Map<List<ExerciseDto>>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }

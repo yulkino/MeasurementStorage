@@ -11,10 +11,10 @@ using Storage.Domain.UserData;
 
 namespace Storage.Api.Controllers;
 
-
+//TODO authorization
 [ApiController]
 [Route("[controller]")]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class RoleController : ControllerBase
 {
     private readonly IMapper _mapper;
@@ -38,7 +38,7 @@ public class RoleController : ControllerBase
         };
     }
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [HttpPut("{userId}")]
     public async Task<ActionResult<UserDto>> EditUserRole([FromRoute] Guid userId, [FromBody] UserRoleDto role)
     {
@@ -48,7 +48,7 @@ public class RoleController : ControllerBase
         {
             DoesNotExist doesNotExist => BadRequest(doesNotExist.Content),
             KeyIsOccupied keyIsOccupied => BadRequest(keyIsOccupied),
-            Success<UserDto> success => Ok(_mapper.Map<UserDto>(success.Content)),
+            Success<User> success => Ok(_mapper.Map<UserDto>(success.Content)),
             _ => throw new ArgumentException("Unexpected result")
         };
     }

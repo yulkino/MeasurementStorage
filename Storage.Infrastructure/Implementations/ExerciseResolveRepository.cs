@@ -14,8 +14,9 @@ internal class ExerciseResolveRepository : Repository, IExerciseResolveRepositor
         => Context.ExercisesResolves.AddAsync(exerciseResolve, cancellationToken).AsTask();
 
     public Task<ExerciseResolve?> GetExerciseResolvesByIdAsync(Guid id, CancellationToken cancellationToken)
-        => Context.ExercisesResolves.FindAsync(id, cancellationToken).AsTask();
+        => Context.ExercisesResolves.FindAsync(new object?[] { id }, cancellationToken).AsTask();
 
+    //TODO переписать, а то еф не может
     public Task<List<ExerciseResolve>> GetExerciseResolvesByUserAsync(User user, CancellationToken cancellationToken)
         => Context.ExercisesResolves
             .Where(o => o == Context.ExercisesResolves

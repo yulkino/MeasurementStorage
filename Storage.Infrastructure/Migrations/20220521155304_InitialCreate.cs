@@ -327,6 +327,8 @@ namespace Storage.Infrastructure.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.InsertData("Role", "Name", new string[] { "Default", "Editor", "Admin" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

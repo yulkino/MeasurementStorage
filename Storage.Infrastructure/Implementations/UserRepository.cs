@@ -7,7 +7,13 @@ namespace Storage.Infrastructure.Implementations;
 
 internal class UserRepository : Repository, IUserRepository
 {
-    public UserRepository(ApplicationDbContext context) : base(context) { }
+    private readonly IQueryable<User> _usersWithRoles;
+
+    public UserRepository(ApplicationDbContext context) : base(context)
+    {
+        _usersWithRoles = Context.Users
+            .Include(u => u.Roles);
+    }
 
     public Task CreateUserAsync(User user, CancellationToken cancellationToken)
         => Context.Users.AddAsync(user, cancellationToken).AsTask();
@@ -25,11 +31,11 @@ internal class UserRepository : Repository, IUserRepository
         => Context.Users.ToListAsync(cancellationToken);
 
     public Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
-        => Context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+        => _usersWithRoles.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
     public Task<User?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
-        => Context.Users.FindAsync(id, cancellationToken).AsTask();
+        => _usersWithRoles.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
     public Task<User?> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
-        => Context.Users.FindAsync(login, cancellationToken).AsTask();
+        => _usersWithRoles.FirstOrDefaultAsync(u => u.Login == login, cancellationToken);
 }

@@ -11,9 +11,8 @@ namespace Storage.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddInfrastructure(this IServiceCollection services, string connectionString)
-    {
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString))
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString) 
+        => services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString))
             .AddIdentity<User, Role>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddUserStore<UserStore<User, Role, ApplicationDbContext, Guid>>()
@@ -23,6 +22,6 @@ public static class ServiceCollectionExtensions
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IExerciseRepository, ExerciseRepository>()
             .AddScoped<IExerciseResolveRepository, ExerciseResolveRepository>()
-            .AddScoped<IPasswordHasher, PasswordHasher>();
-    }
+            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<ITestCaseRepository, TestCaseRepository>();
 }

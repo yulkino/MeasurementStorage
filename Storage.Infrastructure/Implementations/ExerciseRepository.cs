@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Storage.Application.Repositories;
 using Storage.Domain.ExerciseData;
 using Storage.Domain.UserData;
@@ -8,7 +9,12 @@ namespace Storage.Infrastructure.Implementations;
 
 internal class ExerciseRepository : Repository, IExerciseRepository
 {
-    public ExerciseRepository(ApplicationDbContext context) : base(context) { }
+    private readonly IQueryable<Exercise> _exercisesWithTestCases;
+
+    public ExerciseRepository(ApplicationDbContext context) : base(context)
+    {
+        _exercisesWithTestCases = Context.Exercises.Include(e => e.TestCases);
+    }
 
     public Task CreateExerciseAsync(Exercise exercise, CancellationToken cancellationToken)
         => Context.Exercises.AddAsync(exercise, cancellationToken).AsTask();
@@ -23,7 +29,7 @@ internal class ExerciseRepository : Repository, IExerciseRepository
         => Context.Exercises.Where(e => e.Author == author).ToListAsync(cancellationToken);
 
     public Task<Exercise?> GetExerciseByIdAsync(Guid id, CancellationToken cancellationToken)
-        => Context.Exercises.FindAsync(id, cancellationToken).AsTask();
+        => _exercisesWithTestCases.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
 
     public Task<int> GetResolvesCount(Exercise exercise, CancellationToken cancellationToken)
         => Context.ExercisesResolves.Where(e => e.Exercise == exercise).CountAsync(cancellationToken);

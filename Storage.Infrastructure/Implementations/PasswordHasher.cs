@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 
 namespace Storage.Infrastructure.Implementations;
 
+//TODO что-то работает не так
 internal class PasswordHasher : IPasswordHasher
 {
     private const int SaltLength = 16;
