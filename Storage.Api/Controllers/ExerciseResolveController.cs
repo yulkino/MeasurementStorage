@@ -29,7 +29,7 @@ public class ExerciseResolveController : ControllerBase
     }
 
     //todo check
-    [HttpGet("{userid}/{exerciseId}/{sendingDate}")]
+    [HttpGet("{userId}/{exerciseId}/{sendingDate}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetConcreteExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId, [FromRoute] DateTime sendingDate)
     {
@@ -44,7 +44,7 @@ public class ExerciseResolveController : ControllerBase
     }
 
     //todo check
-    [HttpGet("{userid}/{exerciseId}")]
+    [HttpGet("{userId}/{exerciseId}")]
     public async Task<ActionResult<VersionControlExerciseResolvesDto>> GetBetterExerciseResolveAndOtherVersions(
         [FromRoute] Guid userId, [FromRoute] Guid exerciseId)
     {
@@ -58,7 +58,6 @@ public class ExerciseResolveController : ControllerBase
         };
     }
 
-    //todo check
     [HttpGet("{userId}")]
     public async Task<ActionResult<List<ExerciseResolveDto>>> GetExerciseResolvesOfUser([FromRoute] Guid userId)
     {

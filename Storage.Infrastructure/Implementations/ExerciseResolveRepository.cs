@@ -16,13 +16,16 @@ internal class ExerciseResolveRepository : Repository, IExerciseResolveRepositor
     public Task<ExerciseResolve?> GetExerciseResolvesByIdAsync(Guid id, CancellationToken cancellationToken)
         => Context.ExercisesResolves.FindAsync(new object?[] { id }, cancellationToken).AsTask();
 
-    //TODO переписать, а то еф не может
     public Task<List<ExerciseResolve>> GetExerciseResolvesByUserAsync(User user, CancellationToken cancellationToken)
-        => Context.ExercisesResolves
-            .Where(o => o == Context.ExercisesResolves
-                .Where(x => x.User == user && x.Exercise == o.Exercise)
-                .MinBy(x => x.ExecutionTime))
-            .ToListAsync(cancellationToken);
+        => Task.FromResult(Context.ExercisesResolves
+            .Include(er => er.Exercise)
+            .Where(er => er.User == user)
+            .AsEnumerable()
+            .GroupBy(er => er.Exercise, (e, ers) 
+                => ers.MinBy(er => er.ExecutionTime))
+            .Where(er => er != null)
+            .Select(er => er!)
+            .ToList());
 
     public Task<List<ExerciseResolve>> GetExerciseResolvesByConcreteTaskAsync(User user, Exercise exercise,
         CancellationToken cancellationToken)
