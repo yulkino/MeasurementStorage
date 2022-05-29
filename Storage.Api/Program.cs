@@ -12,9 +12,12 @@ services.AddInfrastructure(builder.Configuration.GetConnectionString("Measuremen
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
-services.AddCors(options 
-    => options.AddDefaultPolicy(corsPolicyBuilder
-        => corsPolicyBuilder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()));
+services.AddCors(p => p.AddDefaultPolicy(options => options
+    .WithOrigins("http://localhost:3000", "http://localhost:80", "http://localhost")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .WithExposedHeaders("Content-Disposition")));
 
 services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
